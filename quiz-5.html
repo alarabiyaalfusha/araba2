@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Latihan Membicarakan Masa Lalu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@500;700&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: one centered card on a deep green field, gold accents, answer buttons stacked on phones. */
+:root{
+  --green:#076756; --green-2:#1C9174; --gold:#F2D36D; --cream:#F0F2EB; --ink:#2a2018;
+  --ok:#2e9e4f; --no:#d63a3a;
+  --ar:'Noto Naskh Arabic','Amiri','Traditional Arabic',serif;
+  --ui:'Nunito',system-ui,sans-serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--green);color:var(--cream);font-family:var(--ui)}
+body{display:flex;justify-content:center;padding:20px 16px 40px}
+main{width:100%;max-width:760px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+h1{font-size:1.05rem;margin:0;font-weight:800;letter-spacing:.02em;color:var(--gold)}
+.score{font-weight:800;font-variant-numeric:tabular-nums}
+.bar{height:10px;border-radius:99px;background:var(--green-2);overflow:hidden;margin-bottom:18px}
+.bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .35s}
+.card{background:var(--cream);color:var(--ink);border-radius:22px;padding:22px 18px;border:4px solid var(--gold)}
+.kind{font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--green-2);margin:0 0 10px}
+.q{display:flex;align-items:center;gap:14px;justify-content:center;margin:6px 0 4px}
+.ar{font-family:var(--ar);font-weight:700;direction:rtl;line-height:1.5}
+.q .ar{font-size:clamp(2.1rem,8vw,3.4rem);text-align:center}
+.hint{text-align:center;font-weight:800;font-size:1.1rem;margin:0 0 18px;color:var(--green-2)}
+.snd{flex:none;width:56px;height:56px;border-radius:50%;border:0;background:var(--green);color:var(--gold);font-size:1.5rem;cursor:pointer}
+.snd:focus-visible,.opt:focus-visible,.next:focus-visible{outline:4px solid var(--gold);outline-offset:3px}
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:560px){.opts{grid-template-columns:1fr}}
+.opt{position:relative;border:4px solid var(--green);background:var(--gold);color:var(--ink);border-radius:18px;padding:14px 10px;cursor:pointer;min-height:84px;display:flex;align-items:center;justify-content:center}
+.opt .ar{font-size:1.9rem;text-align:center}
+.opt.lat{font-weight:800;font-size:1.15rem;text-align:center}
+.opt:hover:not(:disabled){transform:translateY(-2px)}
+.opt:disabled{cursor:default}
+.badge{position:absolute;top:-16px;inset-inline-end:-10px;width:44px;height:44px;border-radius:50%;border:3px solid #fff;color:#fff;font-size:1.4rem;font-weight:800;display:none;align-items:center;justify-content:center}
+.opt.ok .badge{display:flex;background:var(--ok)}
+.opt.no .badge{display:flex;background:var(--no)}
+.opt.reveal{border-color:var(--ok)}
+.fb{text-align:center;font-weight:800}
+.next{display:none;margin:14px auto 0;border:0;border-radius:99px;background:var(--green);color:var(--gold);font:800 1.05rem var(--ui);padding:12px 28px;cursor:pointer}
+.end{text-align:center}
+.end h2{margin:6px 0;font-size:1.6rem}
+.end .big{font-size:3rem;font-weight:800;font-variant-numeric:tabular-nums}
+.pic{width:190px;max-width:60%;margin:0 auto 6px;background:#fff;border:3px solid var(--gold);border-radius:18px;padding:6px}
+.pic svg{width:100%;height:auto;display:block}
+.chk{display:flex;gap:8px;justify-content:center;align-items:center;font-weight:800;margin:10px 0 4px}
+.fb{min-height:1.6em;margin:16px 0 0}
+.expl{margin-top:8px;font-weight:600;background:#fff;border-radius:14px;padding:10px 12px;border:2px solid var(--gold)}
+.expl .ar{font-size:1.6rem}
+.mini{border:0;border-radius:50%;width:34px;height:34px;background:var(--green);color:var(--gold);cursor:pointer;margin-inline-start:6px}
+.rev{list-style:none;padding:0;margin:0 0 6px;text-align:start;display:grid;gap:6px}
+.rev .ar{font-size:1.4rem}
+.emo{font-size:4.2rem;text-align:center;line-height:1.1;margin:0 0 6px}
+.bank,.ans{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;direction:rtl;min-height:62px;padding:10px;border-radius:16px}
+.ans{background:#fff;border:3px dashed var(--green);margin-bottom:12px}
+.tok{font-family:var(--ar);font-weight:700;font-size:1.6rem;border:3px solid var(--green);background:var(--gold);color:var(--ink);border-radius:14px;padding:6px 14px;cursor:pointer}
+.tok:disabled{opacity:.35}
+.mt{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mt button{border:3px solid var(--green);background:var(--gold);color:var(--ink);border-radius:14px;padding:12px 8px;min-height:64px;cursor:pointer;font:800 1rem var(--ui)}
+.mt button.ar{font:700 1.5rem var(--ar)}
+.mt .sel{outline:4px solid var(--green)}
+.mt .done{background:var(--ok);color:#fff;border-color:var(--ok);cursor:default}
+.mt .bad{background:#f4b8b8;border-color:var(--no)}
+.note{font-size:.85rem;opacity:.8;text-align:center;margin-top:16px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.back{color:var(--gold);font-weight:800;text-decoration:none;font-size:.9rem;border:2px solid var(--gold);border-radius:99px;padding:4px 12px}
+</style>
+</head>
+<body>
+<main>
+  <header><a href="index.html#quizzes" class="back">← Menu · القائمة</a><h1>تدريب · Latihan</h1><div class="score" id="score">0 / 0</div></header>
+  <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+  <section class="card" id="card" aria-live="polite"></section>
+  <p class="note">Tombol 🔊 membaca kalimat memakai suara perangkat; jika tidak ada suara Arab, tombol tidak berbunyi.</p>
+</main>
+<script>
+var T={mean:"Pilih arti · اختر المعنى",tr:"Pilih bentuk Arab · اختر العبارة",dl:"Jawab dialog · رد الحوار",fill:"Lengkapi kalimat · أكمل",listen:"Dengarkan · استمع",order:"Susun kalimat · رتب الكلمات",match:"Pasangkan · طابق",sit:"Situasi · الموقف"};
+function mc(n,kind,o){o.n=n;o.kind=kind;o.type='mc';return o}
+var DATA=[{"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "ذَهَبْتُ إِلَى السُّوقِ أَمْسِ.", "hint": "Apa artinya?", "opts": ["Kemarin saya pergi ke pasar.", "Cuacanya bagus kemarin.", "Saya belajar bahasa Inggris sebelum bahasa Arab."], "arOpts": false, "full": "ذَهَبْتُ إِلَى السُّوقِ أَمْسِ.", "id": "Kemarin saya pergi ke pasar.", "n": 1}, {"type": "mc", "kind": "Dengarkan · استمع", "ar": "", "listen": "زُرْتُ جَدِّي فِي الْقَرْيَةِ.", "emo": "🎧", "hint": "Tekan 🔊 lalu pilih yang kamu dengar.", "opts": ["زُرْتُ جَدِّي فِي الْقَرْيَةِ.", "الْتَقَيْنَا أَوَّلَ مَرَّةٍ فِي الْجَامِعَةِ.", "كُنْتُ فِي الْمَكْتَبَةِ أَقْرَأُ."], "arOpts": true, "full": "زُرْتُ جَدِّي فِي الْقَرْيَةِ.", "id": "Saya mengunjungi kakek saya di desa.", "n": 2}, {"type": "mc", "kind": "Pilih bentuk Arab · اختر العبارة", "ar": "", "hint": "Kami menonton film yang bagus.", "opts": ["شَاهَدْنَا فِيلْمًا جَمِيلًا.", "وُلِدْتُ فِي مَدِينَةٍ صَغِيرَةٍ.", "لَمْ أَفْهَمِ السُّؤَالَ."], "arOpts": true, "full": "شَاهَدْنَا فِيلْمًا جَمِيلًا.", "id": "Kami menonton film yang bagus.", "n": 3}, {"type": "mc", "kind": "Jawab dialog · رد الحوار", "hint": "Pilih jawaban yang tepat.", "ar": "مَتَى اسْتَيْقَظْتَ الْيَوْمَ؟", "opts": ["اسْتَيْقَظْتُ الْيَوْمَ فِي السَّادِسَةِ.", "نَعَمْ، وَالْيَوْمَ أَيْضًا.", "لِمَاذَا تَأَخَّرْتَ؟"], "arOpts": true, "full": "اسْتَيْقَظْتُ الْيَوْمَ فِي السَّادِسَةِ.", "id": "Hari ini saya bangun jam enam.", "n": 4}, {"type": "order", "kind": "Susun kalimat · رتب الكلمات", "hint": "Saya ketinggalan bus.", "words": ["تَأَخَّرْتُ", "عَنِ", "الْحَافِلَةِ."], "full": "تَأَخَّرْتُ عَنِ الْحَافِلَةِ.", "id": "Saya ketinggalan bus.", "n": 5}, {"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "قَابَلْتُ صَدِيقِي الْقَدِيمَ.", "hint": "Apa artinya?", "opts": ["Saya bertemu teman lama saya.", "Saya mendengar suara aneh.", "Saya membaca buku tentang sejarah."], "arOpts": false, "full": "قَابَلْتُ صَدِيقِي الْقَدِيمَ.", "id": "Saya bertemu teman lama saya.", "n": 6}, {"type": "mc", "kind": "Jawab dialog · رد الحوار", "hint": "Pilih jawaban yang tepat.", "ar": "اشْتَرَيْتُ حِذَاءً جَدِيدًا الْأُسْبُوعَ الْمَاضِيَ.", "opts": ["أَرِنِي إِيَّاهُ.", "مُمْتَازٌ!", "وَمَنْ كَانَ عِنْدَ الْبَابِ؟"], "arOpts": true, "full": "أَرِنِي إِيَّاهُ.", "id": "Perlihatkan padaku.", "n": 7}, {"type": "mc", "kind": "Pilih bentuk Arab · اختر العبارة", "ar": "", "hint": "Saya tidak mengerti pertanyaannya.", "opts": ["لَمْ أَفْهَمِ السُّؤَالَ.", "ضَاعَ مِنِّي هَاتِفِي.", "الْتَقَيْنَا أَوَّلَ مَرَّةٍ فِي الْجَامِعَةِ."], "arOpts": true, "full": "لَمْ أَفْهَمِ السُّؤَالَ.", "id": "Saya tidak mengerti pertanyaannya.", "n": 8}, {"type": "mc", "kind": "Dengarkan · استمع", "ar": "", "listen": "أَيْنَ كُنْتَ؟", "emo": "🎧", "hint": "Tekan 🔊 lalu pilih yang kamu dengar.", "opts": ["أَيْنَ كُنْتَ؟", "دَرَسْتُ الْإِنْجْلِيزِيَّةَ قَبْلَ الْعَرَبِيَّةِ.", "وَصَلْتُ إِلَى الْمَدْرَسَةِ مُبَكِّرًا."], "arOpts": true, "full": "أَيْنَ كُنْتَ؟", "id": "Kamu tadi di mana?", "n": 9}, {"type": "match", "kind": "Pasangkan · طابق", "hint": "Pasangkan kalimat dengan artinya.", "pairs": [["لَقَدْ نَسِيتُ مِفْتَاحِي.", "Saya lupa (membawa) kunci saya."], ["تَحَدَّثْنَا لِسَاعَتَيْنِ.", "Kami mengobrol selama dua jam."], ["لَمْ أَنْسَ يَوْمَ زَوَاجِي.", "Saya tidak melupakan hari pernikahan saya."], ["مَا زِلْتُ أَتَذَكَّرُ ذَلِكَ الْيَوْمَ.", "Saya masih ingat hari itu."]], "full": "لَقَدْ نَسِيتُ مِفْتَاحِي. — تَحَدَّثْنَا لِسَاعَتَيْنِ. — لَمْ أَنْسَ يَوْمَ زَوَاجِي. — مَا زِلْتُ أَتَذَكَّرُ ذَلِكَ الْيَوْمَ.", "id": "Saya lupa (membawa) kunci saya. / Kami mengobrol selama dua jam. / Saya tidak melupakan hari pernikahan saya. / Saya masih ingat hari itu.", "n": 10}, {"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "وَجَدْتُ مِحْفَظَتِي أَخِيرًا.", "hint": "Apa artinya?", "opts": ["Akhirnya saya menemukan dompet saya.", "Saya masih ingat hari itu.", "Apa yang kamu makan saat sarapan?"], "arOpts": false, "full": "وَجَدْتُ مِحْفَظَتِي أَخِيرًا.", "id": "Akhirnya saya menemukan dompet saya.", "n": 11}, {"type": "mc", "kind": "Dengarkan · استمع", "ar": "", "listen": "رَأَيْتُ أَخِي فِي السُّوقِ.", "emo": "🎧", "hint": "Tekan 🔊 lalu pilih yang kamu dengar.", "opts": ["رَأَيْتُ أَخِي فِي السُّوقِ.", "مَاذَا فَعَلْتَ أَمْسِ؟", "اشْتَرَيْتُ حِذَاءً جَدِيدًا الْأُسْبُوعَ الْمَاضِيَ."], "arOpts": true, "full": "رَأَيْتُ أَخِي فِي السُّوقِ.", "id": "Saya melihat saudara saya di pasar.", "n": 12}, {"type": "mc", "kind": "Pilih bentuk Arab · اختر العبارة", "ar": "", "hint": "Ayah berkata kepada saya agar berhati-hati.", "opts": ["قَالَ لِي أَبِي أَنْ أَنْتَبِهَ.", "اسْتَيْقَظْتُ الْيَوْمَ فِي السَّادِسَةِ.", "وَصَلْتُ إِلَى الْمَدْرَسَةِ مُبَكِّرًا."], "arOpts": true, "full": "قَالَ لِي أَبِي أَنْ أَنْتَبِهَ.", "id": "Ayah berkata kepada saya agar berhati-hati.", "n": 13}, {"type": "mc", "kind": "Jawab dialog · رد الحوار", "hint": "Pilih jawaban yang tepat.", "ar": "أَرْسَلْتُ رِسَالَةً إِلَى صَدِيقِي.", "opts": ["هَلْ رَدَّ عَلَيْكَ؟", "مَاذَا قَالَتْ؟", "لَا بَأْسَ، سَأَشْتَرِي غَيْرَهُ."], "arOpts": true, "full": "هَلْ رَدَّ عَلَيْكَ؟", "id": "Apakah dia membalasmu?", "n": 14}, {"type": "order", "kind": "Susun kalimat · رتب الكلمات", "hint": "Saya membaca buku tentang sejarah.", "words": ["قَرَأْتُ", "كِتَابًا", "عَنِ", "التَّارِيخِ."], "full": "قَرَأْتُ كِتَابًا عَنِ التَّارِيخِ.", "id": "Saya membaca buku tentang sejarah.", "n": 15}, {"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "وُلِدْتُ فِي مَدِينَةٍ صَغِيرَةٍ.", "hint": "Apa artinya?", "opts": ["Saya lahir di kota kecil.", "Saya masih ingat hari itu.", "Saya membaca buku tentang sejarah."], "arOpts": false, "full": "وُلِدْتُ فِي مَدِينَةٍ صَغِيرَةٍ.", "id": "Saya lahir di kota kecil.", "n": 16}, {"type": "mc", "kind": "Jawab dialog · رد الحوار", "hint": "Pilih jawaban yang tepat.", "ar": "عِشْتُ فِي الْقَاهِرَةِ لِمُدَّةِ سَنَتَيْنِ.", "opts": ["وَهَلْ أَعْجَبَتْكَ؟", "وَكَمْ بَقِيتَ هُنَاكَ؟", "نَعَمْ، وَالْيَوْمَ أَيْضًا."], "arOpts": true, "full": "وَهَلْ أَعْجَبَتْكَ؟", "id": "Apakah kamu menyukainya?", "n": 17}, {"type": "mc", "kind": "Pilih bentuk Arab · اختر العبارة", "ar": "", "hint": "Dulu kakek menceritakan kisah-kisah kepada kami setiap malam.", "opts": ["كَانَ جَدِّي يَحْكِي لَنَا قِصَصًا كُلَّ لَيْلَةٍ.", "تَحَدَّثْنَا لِسَاعَتَيْنِ.", "مَاذَا أَكَلْتَ فِي الْفَطُورِ؟"], "arOpts": true, "full": "كَانَ جَدِّي يَحْكِي لَنَا قِصَصًا كُلَّ لَيْلَةٍ.", "id": "Dulu kakek menceritakan kisah-kisah kepada kami setiap malam.", "n": 18}, {"type": "mc", "kind": "Dengarkan · استمع", "ar": "", "listen": "لَمْ أَكُنْ أُحِبُّ الْخُضَارَ، لَكِنَّنِي الْآنَ أُحِبُّهَا.", "emo": "🎧", "hint": "Tekan 🔊 lalu pilih yang kamu dengar.", "opts": ["لَمْ أَكُنْ أُحِبُّ الْخُضَارَ، لَكِنَّنِي الْآنَ أُحِبُّهَا.", "اشْتَرَيْتُ حِذَاءً جَدِيدًا الْأُسْبُوعَ الْمَاضِيَ.", "شَاهَدْنَا فِيلْمًا جَمِيلًا."], "arOpts": true, "full": "لَمْ أَكُنْ أُحِبُّ الْخُضَارَ، لَكِنَّنِي الْآنَ أُحِبُّهَا.", "id": "Dulu saya tidak suka sayuran, tapi sekarang suka.", "n": 19}, {"type": "match", "kind": "Pasangkan · طابق", "hint": "Pasangkan kalimat dengan artinya.", "pairs": [["كَسَرْتُ الْكُوبَ دُونَ قَصْدٍ.", "Saya memecahkan gelas tanpa sengaja."], ["لَمْ أَفْهَمِ السُّؤَالَ.", "Saya tidak mengerti pertanyaannya."], ["قَبْلَ سَنَوَاتٍ كَانَتِ الْحَيَاةُ أَبْسَطَ.", "Beberapa tahun lalu hidup lebih sederhana."], ["كَانَ الطَّقْسُ جَمِيلًا أَمْسِ.", "Cuacanya bagus kemarin."]], "full": "كَسَرْتُ الْكُوبَ دُونَ قَصْدٍ. — لَمْ أَفْهَمِ السُّؤَالَ. — قَبْلَ سَنَوَاتٍ كَانَتِ الْحَيَاةُ أَبْسَطَ. — كَانَ الطَّقْسُ جَمِيلًا أَمْسِ.", "id": "Saya memecahkan gelas tanpa sengaja. / Saya tidak mengerti pertanyaannya. / Beberapa tahun lalu hidup lebih sederhana. / Cuacanya bagus kemarin.", "n": 20}, {"type": "mc", "kind": "Pilih arti · اختر المعنى", "ar": "مَا زِلْتُ أَتَذَكَّرُ ذَلِكَ الْيَوْمَ.", "hint": "Apa artinya?", "opts": ["Saya masih ingat hari itu.", "Saya tiba di sekolah lebih awal.", "Saya melihat saudara saya di pasar."], "arOpts": false, "full": "مَا زِلْتُ أَتَذَكَّرُ ذَلِكَ الْيَوْمَ.", "id": "Saya masih ingat hari itu.", "n": 21}, {"type": "mc", "kind": "Dengarkan · استمع", "ar": "", "listen": "دَرَسْتُ الْإِنْجْلِيزِيَّةَ قَبْلَ الْعَرَبِيَّةِ.", "emo": "🎧", "hint": "Tekan 🔊 lalu pilih yang kamu dengar.", "opts": ["دَرَسْتُ الْإِنْجْلِيزِيَّةَ قَبْلَ الْعَرَبِيَّةِ.", "نِمْتُ مُتَأَخِّرًا لِأَنِّي كُنْتُ أَدْرُسُ.", "قَرَأْتُ كِتَابًا عَنِ التَّارِيخِ."], "arOpts": true, "full": "دَرَسْتُ الْإِنْجْلِيزِيَّةَ قَبْلَ الْعَرَبِيَّةِ.", "id": "Saya belajar bahasa Inggris sebelum bahasa Arab.", "n": 22}, {"type": "mc", "kind": "Pilih bentuk Arab · اختر العبارة", "emo": "👩", "hint": "Kamu sedang apa ketika saya menelepon? (untuk perempuan)", "opts": ["مَاذَا كُنْتِ تَفْعَلِينَ عِنْدَمَا اتَّصَلْتُ بِكِ؟", "مَاذَا كُنْتَ تَفْعَلُ عِنْدَمَا اتَّصَلْتُ بِكَ؟", "رَأَيْتُ أَخِي فِي السُّوقِ."], "arOpts": true, "full": "مَاذَا كُنْتِ تَفْعَلِينَ عِنْدَمَا اتَّصَلْتُ بِكِ؟", "id": "Kamu sedang apa ketika saya menelepon? (bentuk perempuan)", "n": 23}, {"type": "mc", "kind": "Jawab dialog · رد الحوار", "hint": "Pilih jawaban yang tepat.", "ar": "بَعْدَ أَنْ تَخَرَّجْتُ عَمِلْتُ فِي شَرِكَةٍ.", "opts": ["وَكَمْ بَقِيتَ هُنَاكَ؟", "كُنْتُ فِي الْمَكْتَبَةِ أَقْرَأُ.", "وُلِدْتُ فِي مَدِينَةٍ صَغِيرَةٍ."], "arOpts": true, "full": "وَكَمْ بَقِيتَ هُنَاكَ؟", "id": "Dan berapa lama kamu di sana?", "n": 24}, {"type": "order", "kind": "Susun kalimat · رتب الكلمات", "hint": "Saya tidak melupakan hari pernikahan saya.", "words": ["لَمْ", "أَنْسَ", "يَوْمَ", "زَوَاجِي."], "full": "لَمْ أَنْسَ يَوْمَ زَوَاجِي.", "id": "Saya tidak melupakan hari pernikahan saya.", "n": 25}];
+var card=document.getElementById('card'),shuffleQ=true,list,i,score,answered,wrong;
+function shuffle(a){a=a.slice();for(var k=a.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1));var t=a[k];a[k]=a[j];a[j]=t}return a}
+function speak(t){try{if(!window.speechSynthesis||!t)return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang='ar-SA';u.rate=.85;speechSynthesis.speak(u)}catch(e){}}
+function setBar(v){document.getElementById('bar').style.width=(v/list.length*100)+'%'}
+function home(){
+  list=DATA;i=0;score=0;
+  document.getElementById('score').textContent='';document.getElementById('bar').style.width='0';
+  card.innerHTML='<div class="end"><p class="kind">Selamat datang · أهلًا بك</p><h2>Latihan: Membicarakan Masa Lalu</h2><p class="hint" style="margin-bottom:6px">الحديث عن الماضي · 25 soal dengan beragam tipe: pilihan, dengar, susun kata, dan pasangkan.</p><label class="chk"><input type="checkbox" id="rnd" checked> Acak urutan soal</label><button class="next" id="go" style="display:block">Mulai · ابدأ</button></div>';
+  document.getElementById('go').onclick=function(){shuffleQ=document.getElementById('rnd').checked;begin(DATA)};
+}
+function begin(items){list=shuffleQ?shuffle(items):items.slice();i=0;score=0;wrong=[];show()}
+function head(q){return '<p class="kind">'+q.kind+' · '+(i+1)+'/'+list.length+'</p>'}
+function show(){
+  answered=false;var q=list[i];
+  setBar(i);document.getElementById('score').textContent=score+' / '+i;
+  if(q.type==='order')return showOrder(q);
+  if(q.type==='match')return showMatch(q);
+  var idx=shuffle(q.opts.map(function(_,k){return k}));
+  var h=head(q);
+  if(q.emo)h+='<div class="emo" aria-hidden="true">'+q.emo+'</div>';
+  if(q.ar||q.listen)h+='<div class="q"><button class="snd" id="snd" aria-label="Putar suara">🔊</button>'+(q.ar?'<span class="ar">'+q.ar+'</span>':'')+'</div>';
+  h+='<p class="hint">'+q.hint+'</p><div class="opts">';
+  idx.forEach(function(k){h+='<button class="opt'+(q.arOpts?'':' lat')+'" data-k="'+k+'"><span class="'+(q.arOpts?'ar':'')+'">'+q.opts[k]+'</span><span class="badge" aria-hidden="true"></span></button>'});
+  h+='</div><div class="fb" id="fb"></div><button class="next" id="next">Lanjut ←</button>';
+  card.innerHTML=h;
+  var sb=document.getElementById('snd');if(sb)sb.onclick=function(){speak(q.listen||q.ar)};
+  Array.prototype.forEach.call(card.querySelectorAll('.opt'),function(b){b.onclick=function(){pick(b,q)}});
+  document.getElementById('next').onclick=advance;
+}
+function advance(){i++;i<list.length?show():finish()}
+function result(q,right){
+  if(right)score++;else wrong.push(q);
+  var fb=document.getElementById('fb');
+  fb.innerHTML='<div style="color:'+(right?'#1f7a3c':'#b02a2a')+'">'+(right?'Benar! أحسنت':'Belum tepat.')+'</div><div class="expl"><span class="ar">'+q.full+'</span><br>'+q.id+' <button class="mini" id="snd2" aria-label="Putar suara">🔊</button></div>';
+  document.getElementById('snd2').onclick=function(){speak(q.full.split(' — ')[0])};
+  document.getElementById('score').textContent=score+' / '+(i+1);setBar(i+1);
+  var n=document.getElementById('next');n.style.display='block';n.textContent=(i+1<list.length)?'Lanjut ←':'Lihat hasil';n.focus();
+}
+function pick(b,q){
+  if(answered)return;answered=true;
+  var k=+b.getAttribute('data-k'),right=(k===q.ans||(q.ans===undefined&&k===0));
+  Array.prototype.forEach.call(card.querySelectorAll('.opt'),function(o){o.disabled=true;if(+o.getAttribute('data-k')===0&&!right)o.classList.add('reveal')});
+  b.classList.add(right?'ok':'no');b.querySelector('.badge').textContent=right?'✓':'✕';
+  result(q,right);
+}
+function showOrder(q){
+  var bank=shuffle(q.words.map(function(w,k){return {w:w,k:k}})),chosen=[];
+  var h=head(q)+'<div class="q"><button class="snd" id="snd" aria-label="Putar suara">🔊</button></div><p class="hint">'+q.hint+'</p><div class="ans" id="ans" aria-label="Jawabanmu"></div><div class="bank" id="bank"></div><div class="fb" id="fb"></div><button class="next" id="chk" style="display:block">Periksa · تحقق</button><button class="next" id="next">Lanjut ←</button>';
+  card.innerHTML=h;
+  document.getElementById('snd').onclick=function(){speak(q.full)};
+  function draw(){
+    var a=document.getElementById('ans'),b=document.getElementById('bank');a.innerHTML='';b.innerHTML='';
+    chosen.forEach(function(t,p){var e=document.createElement('button');e.className='tok';e.textContent=t.w;e.onclick=function(){if(answered)return;chosen.splice(p,1);bank.push(t);draw()};a.appendChild(e)});
+    bank.forEach(function(t,p){var e=document.createElement('button');e.className='tok';e.textContent=t.w;e.disabled=answered;e.onclick=function(){bank.splice(p,1);chosen.push(t);draw()};b.appendChild(e)});
+  }
+  draw();
+  document.getElementById('next').onclick=advance;
+  document.getElementById('chk').onclick=function(){
+    if(answered||chosen.length!==q.words.length)return;answered=true;
+    var right=chosen.every(function(t,p){return t.k===p});
+    document.getElementById('ans').style.borderColor=right?'#2e9e4f':'#d63a3a';
+    document.getElementById('chk').style.display='none';draw();result(q,right);
+  };
+}
+function showMatch(q){
+  var L=shuffle(q.pairs.map(function(p,k){return {t:p[0],k:k}})),R=shuffle(q.pairs.map(function(p,k){return {t:p[1],k:k}})),sel=null,left=q.pairs.length,mist=0;
+  var h=head(q)+'<p class="hint">'+q.hint+'</p><div class="mt"><div style="display:grid;gap:10px" id="cl"></div><div style="display:grid;gap:10px" id="cr"></div></div><div class="fb" id="fb"></div><button class="next" id="next">Lanjut ←</button>';
+  card.innerHTML=h;
+  document.getElementById('next').onclick=advance;
+  function mk(col,arr,isAr){arr.forEach(function(x){var b=document.createElement('button');b.textContent=x.t;if(isAr)b.className='ar';b.onclick=function(){
+      if(b.classList.contains('done'))return;
+      if(isAr){speak(x.t);Array.prototype.forEach.call(document.querySelectorAll('#cl button'),function(e){e.classList.remove('sel')});b.classList.add('sel');sel={k:x.k,b:b};return}
+      if(!sel)return;
+      if(sel.k===x.k){sel.b.classList.remove('sel');sel.b.classList.add('done');b.classList.add('done');sel=null;left--;
+        if(!left){answered=true;result(q,mist===0)}}
+      else{mist++;b.classList.add('bad');setTimeout(function(){b.classList.remove('bad')},500)}
+    };col.appendChild(b)})}
+  mk(document.getElementById('cl'),L,true);mk(document.getElementById('cr'),R,false);
+}
+function finish(){
+  var pct=Math.round(score/list.length*100);
+  var h='<div class="end"><p class="kind">Hasil · النتيجة</p><div class="big">'+score+' / '+list.length+'</div><h2>'+(pct>=80?'Mumtaz! ممتاز':pct>=50?'Bagus, terus berlatih':'Ayo coba lagi')+'</h2>';
+  if(wrong.length){h+='<p class="hint" style="margin:10px 0 6px">Perlu diulang:</p><ul class="rev">';wrong.forEach(function(q){h+='<li><span class="ar">'+q.full+'</span> — '+q.id+'</li>'});h+='</ul><button class="next" id="redo" style="display:block">Ulangi yang salah · أعد الأخطاء</button>'}
+  h+='<button class="next" id="again" style="display:block">Mulai dari awal · من البداية</button></div>';
+  card.innerHTML=h;var r=document.getElementById('redo');if(r)r.onclick=function(){begin(wrong.slice())};
+  document.getElementById('again').onclick=home;document.getElementById('bar').style.width='100%';
+}
+var AUDIO={"ذَهَبْتُ إِلَى السُّوقِ أَمْسِ.": "866", "أَيْنَ كُنْتَ أَمْسِ؟": "866a", "مَاذَا فَعَلْتَ أَمْسِ؟": "867", "مَاذَا فَعَلْتِ أَمْسِ؟": "867f", "زُرْتُ جَدِّي.": "867b", "زُرْتُ جَدِّي فِي الْقَرْيَةِ.": "868", "هَذَا جَمِيلٌ.": "868b", "أَكَلْتُ الْغَدَاءَ مَعَ أُسْرَتِي.": "869", "مَعَ مَنْ أَكَلْتَ؟": "869a", "شَاهَدْنَا فِيلْمًا جَمِيلًا.": "870", "مَا اسْمُ الْفِيلْمِ؟": "870b", "نِمْتُ مُتَأَخِّرًا لِأَنِّي كُنْتُ أَدْرُسُ.": "871", "يَجِبُ أَنْ تَنَامَ أَبْكَرَ.": "871b", "اسْتَيْقَظْتُ الْيَوْمَ فِي السَّادِسَةِ.": "872", "مَتَى اسْتَيْقَظْتَ الْيَوْمَ؟": "872a", "وَصَلْتُ إِلَى الْمَدْرَسَةِ مُبَكِّرًا.": "873", "أَحْسَنْتَ.": "873b", "تَأَخَّرْتُ عَنِ الْحَافِلَةِ.": "874", "لِمَاذَا تَأَخَّرْتَ؟": "874b", "مَاذَا أَكَلْتَ فِي الْفَطُورِ؟": "875", "مَاذَا أَكَلْتِ فِي الْفَطُورِ؟": "875f", "أَكَلْتُ بَيْضًا وَخُبْزًا.": "875b", "قَابَلْتُ صَدِيقِي الْقَدِيمَ.": "876", "أَيْنَ قَابَلْتَهُ؟": "876b", "تَحَدَّثْنَا لِسَاعَتَيْنِ.": "877", "هَذَا طَوِيلٌ!": "877b", "اشْتَرَيْتُ حِذَاءً جَدِيدًا الْأُسْبُوعَ الْمَاضِيَ.": "878", "أَرِنِي إِيَّاهُ.": "878b", "كَانَ الطَّقْسُ جَمِيلًا أَمْسِ.": "879", "نَعَمْ، وَالْيَوْمَ أَيْضًا.": "879b", "لَمْ أَذْهَبْ إِلَى الْعَمَلِ الْيَوْمَ.": "880", "لِمَاذَا؟ هَلْ أَنْتَ مَرِيضٌ؟": "880b", "لَمْ أَفْهَمِ السُّؤَالَ.": "881", "سَأُعِيدُهُ لَكَ.": "881b", "هَلْ أَنْهَيْتَ وَاجِبَكَ؟": "882", "هَلْ أَنْهَيْتِ وَاجِبَكِ؟": "882f", "نَعَمْ، أَنْهَيْتُهُ.": "882b", "أَيْنَ كُنْتَ؟": "883", "أَيْنَ كُنْتِ؟": "883f", "كُنْتُ فِي الْمَكْتَبَةِ.": "883b", "كُنْتُ فِي الْمَكْتَبَةِ أَقْرَأُ.": "884", "لَقَدْ نَسِيتُ مِفْتَاحِي.": "885", "هَلْ بَحَثْتَ فِي حَقِيبَتِكَ؟": "885b", "ضَاعَ مِنِّي هَاتِفِي.": "886", "اتَّصِلْ بِرَقْمِكَ.": "886b", "وَجَدْتُ مِحْفَظَتِي أَخِيرًا.": "887", "الْحَمْدُ لِلَّهِ!": "887b", "سَمِعْتُ صَوْتًا غَرِيبًا.": "888", "مِنْ أَيْنَ؟": "888b", "رَأَيْتُ أَخِي فِي السُّوقِ.": "889", "هَلْ كَانَ مَعَهُ أَحَدٌ؟": "889b", "اتَّصَلَتْ بِي أُمِّي صَبَاحًا.": "890", "مَاذَا قَالَتْ؟": "890b", "قَالَ لِي أَبِي أَنْ أَنْتَبِهَ.": "891", "هُوَ عَلَى حَقٍّ.": "891b", "أَعْطَانِي أَخِي هَدِيَّةً.": "892", "مَا هِيَ؟": "892b", "أَرْسَلْتُ رِسَالَةً إِلَى صَدِيقِي.": "893", "هَلْ رَدَّ عَلَيْكَ؟": "893b", "كَتَبْتُ لَهُ بِالْعَرَبِيَّةِ.": "894", "مُمْتَازٌ!": "894b", "قَرَأْتُ كِتَابًا عَنِ التَّارِيخِ.": "895", "هَلْ أَعْجَبَكَ؟": "895b", "عِنْدَمَا كُنْتُ صَغِيرًا كُنْتُ أَسْكُنُ فِي قَرْيَةٍ.": "896", "وَهَلْ كَانَتْ جَمِيلَةً؟": "896b", "وُلِدْتُ فِي مَدِينَةٍ صَغِيرَةٍ.": "897", "أَيْنَ وُلِدْتَ؟": "897a", "كُنْتُ طَالِبًا فِي جَامِعَةِ جَاكَرْتَا.": "898", "كُنْتُ طَالِبَةً فِي جَامِعَةِ جَاكَرْتَا.": "898f", "مَاذَا كُنْتَ تَدْرُسُ؟": "898b", "عِشْتُ فِي الْقَاهِرَةِ لِمُدَّةِ سَنَتَيْنِ.": "899", "وَهَلْ أَعْجَبَتْكَ؟": "899b", "تَعَلَّمْتُ السِّبَاحَةَ فِي الصِّغَرِ.": "900", "أَنَا تَعَلَّمْتُهَا مُتَأَخِّرًا.": "900b", "كَانَ جَدِّي يَحْكِي لَنَا قِصَصًا كُلَّ لَيْلَةٍ.": "901", "يَا لَهَا مِنْ ذِكْرَيَاتٍ جَمِيلَةٍ!": "901b", "أَمْضَيْنَا الْعُطْلَةَ الْمَاضِيَةَ عِنْدَ الْبَحْرِ.": "902", "هَلْ سَبَحْتُمْ كَثِيرًا؟": "902b", "فِي الْعَامِ الْمَاضِي زُرْتُ مَكَّةَ لِلْعُمْرَةِ.": "903", "تَقَبَّلَ اللهُ.": "903b", "لَمْ أَكُنْ أُحِبُّ الْخُضَارَ، لَكِنَّنِي الْآنَ أُحِبُّهَا.": "904", "هَذَا تَغَيُّرٌ جَيِّدٌ.": "904b", "سَقَطْتُ مِنَ الدَّرَّاجَةِ أَمْسِ.": "905", "هَلْ أُصِبْتَ؟": "905b", "كَسَرْتُ الْكُوبَ دُونَ قَصْدٍ.": "906", "لَا بَأْسَ، سَأَشْتَرِي غَيْرَهُ.": "906b", "الْتَقَيْنَا أَوَّلَ مَرَّةٍ فِي الْجَامِعَةِ.": "907", "وَمُنْذُ ذَلِكَ الْحِينِ أَصْبَحْنَا أَصْدِقَاءَ.": "907b", "مَا زِلْتُ أَتَذَكَّرُ ذَلِكَ الْيَوْمَ.": "908", "وَأَنَا أَيْضًا.": "908b", "قَضَيْتُ الصَّيْفَ كُلَّهُ فِي الْقَرْيَةِ.": "909", "يَبْدُو أَنَّكَ اسْتَمْتَعْتَ.": "909b", "دَرَسْتُ الْإِنْجْلِيزِيَّةَ قَبْلَ الْعَرَبِيَّةِ.": "910", "أَيُّهُمَا أَصْعَبُ؟": "910b", "مَاذَا حَدَثَ؟": "911", "ضَاعَتْ حَقِيبَتِي.": "911b", "مَاذَا كُنْتَ تَفْعَلُ عِنْدَمَا اتَّصَلْتُ بِكَ؟": "912", "مَاذَا كُنْتِ تَفْعَلِينَ عِنْدَمَا اتَّصَلْتُ بِكِ؟": "912f", "كُنْتُ أَنَامُ.": "912b", "كُنْتُ أَنَامُ عِنْدَمَا رَنَّ الْجَرَسُ.": "913", "وَمَنْ كَانَ عِنْدَ الْبَابِ؟": "913b", "بَعْدَ أَنْ تَخَرَّجْتُ عَمِلْتُ فِي شَرِكَةٍ.": "914", "وَكَمْ بَقِيتَ هُنَاكَ؟": "914b", "قَبْلَ سَنَوَاتٍ كَانَتِ الْحَيَاةُ أَبْسَطَ.": "915", "نَعَمْ، أَنْتَ عَلَى حَقٍّ.": "915b", "لَمْ أَنْسَ يَوْمَ زَوَاجِي.": "916", "كَانَ يَوْمًا سَعِيدًا.": "916b"},curA=null;
+function speak(t){try{if(curA){curA.pause();curA=null}if(window.speechSynthesis)speechSynthesis.cancel();if(!t)return;
+ function tts(){try{if(!window.speechSynthesis)return;var u=new SpeechSynthesisUtterance(t);u.lang='ar-SA';u.rate=.85;speechSynthesis.speak(u)}catch(e){}}
+ var k=AUDIO[t];if(!k){tts();return}
+ var a=new Audio('audio/'+k+'.mp3');curA=a;a.playbackRate=.95;a.onerror=tts;var p=a.play();if(p&&p.catch)p.catch(tts)}catch(e){}}
+home();
+</script>
+</body>
+</html>
